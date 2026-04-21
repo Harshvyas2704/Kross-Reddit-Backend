@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import jwt from "jwt-simple";
 import * as jwtWeb from "jsonwebtoken";
 import { User } from "../models/User";
+import { log } from "console";
 
 const generateTokens = (userId: string) => {
   const accessToken = jwtWeb.sign(
@@ -71,6 +71,8 @@ export const refresh = async (req: Request, res: Response): Promise<any> => {
 export const register = async (req: Request, res: Response): Promise<any> => {
   try {
     const { email, password, name } = req.body;
+    console.log(req.body);
+
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
@@ -80,6 +82,8 @@ export const register = async (req: Request, res: Response): Promise<any> => {
       .status(201)
       .json({ message: "User created successfully", userId: user.id });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ message: "Server error during registration" });
   }
 };
